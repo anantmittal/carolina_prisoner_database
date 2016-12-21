@@ -1,0 +1,32 @@
+var1: juzgado epms:	[1, 3]
+var2: ciudad:		[1, 4]
+var3: fecha recibo:	[1, 5]
+
+var4: municipio: 	[3, 8]
+var5: corporacion: 	[3, 9]
+var6: Cod Sala:		[3, 10]
+var7: Cons Despacho:[3, 11]
+var8: Año:			[3, 12]
+var9: N Radicacion:	[3, 13]
+var10: Recurso:		[3, 14]
+
+var11: SENTENCIA ANTICIPADA:		[13, 1]
+var12: INSTANCIA FALLADORA 1:			[13, 6]
+var13: FECHA 1:		[13, 7]
+var14: EJECUTORIA 1: 			[13, 8]
+var15: cdno y folios 1:	[13, 9]
+var16: INSTANCIA FALLADORA 2:	[13, 10]
+var17: FECHA 2:	[13, 11]
+var18: EJECUTORIA 2:	[13, 12]
+var19: cdno y folios 2: 		[13, 13]
+var20: INSTANCIA FALLADORA 3:		[13, 14]
+var21: FECHA 3: 		[13, 15]
+var22: EJECUTORIA 3: 		[13, 16]
+var23: cdno y folios 3: 			[13, 17]
+var25: FECHA DE LOS HECHOS: 		[13, 19]
+
+
+
+
+
+
