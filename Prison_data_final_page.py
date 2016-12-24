@@ -11,22 +11,8 @@ exit()
 
 ## Global variables
 # Links for page of each juzgado
-links_j = [ "http://procesos.ramajudicial.gov.co/jepms/armeniajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/bogotajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/bucaramangajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/bugajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/florenciajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/ibaguejepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/manizalesjepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/medellinjepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/neivajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/palmirajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/pastojepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/pereirajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/popayanjepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/calijepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/tunjajepms/conectar.asp",
-         "http://procesos.ramajudicial.gov.co/jepms/villavicenciojepms/conectar.asp"]
+links_j = [
+         "http://procesos.ramajudicial.gov.co/jepms/medellinjepms/conectar.asp"]
 
 # Location of every piece of information
 places = [[1, 3], [1, 4], [1, 5], [3, 8], [3, 9], [3, 10], [3, 11], [3, 12], [3, 13], [3, 14], [7, 1], [7, 3], [7, 5], [7, 7],
@@ -71,7 +57,7 @@ def get_links(link, id_number):
         if control.type == "text":  # make sure it is the right one
             control.value = id_number
 
-    response = br.submit()  
+    response = br.submit()
 
     soup2 = BeautifulSoup(response)
     links = [] # This will store the links that appear after the first search

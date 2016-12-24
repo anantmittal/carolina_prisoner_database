@@ -95,7 +95,7 @@ def get_data(link):
 
 
 # Get ids out of file
-lines = [line.rstrip('\r\n').split('\t') for line in open('comunaid.csv', 'r')]
+lines = [line.rstrip('\r\n').split('\t') for line in open('comunaid_small.csv', 'r')]
 id_numbers = [lines[j][0] for j in xrange(1, len(lines))]
 
 # Get links to pages for last name and every juzgado
