@@ -24,6 +24,7 @@ var21: FECHA 3: 		[13, 15]
 var22: EJECUTORIA 3: 		[13, 16]
 var23: cdno y folios 3: 			[13, 17]
 var25: FECHA DE LOS HECHOS: 		[13, 19]
+var26: LAST NAME
 
 
 
