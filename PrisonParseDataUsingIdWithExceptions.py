@@ -3,7 +3,6 @@ from mechanize import Browser
 import urllib2
 import time
 
-
 links_j = ["http://procesos.ramajudicial.gov.co/jepms/medellinjepms/conectar.asp"]
 
 # Location of every piece of information
@@ -21,8 +20,8 @@ places_first = [[1, 3], [1, 4], [1, 5], [3, 8], [3, 9], [3, 10], [3, 11], [3, 12
 
 
 # Variable names to be written into file (fix later.. or not?)
-varnames_first="ID\tLAST_NAME\t"
-varnames_second="ID\tLAST_NAME\t"
+varnames_first="ID\t"
+varnames_second="ID\t"
 
 for i in xrange(1, len(places_first)+1):
     if i != len(places_first):
@@ -95,13 +94,8 @@ def get_data_second(link):
 
 
 # Get ids out of file
-lines = [line.rstrip('\r\n').split(',') for line in open('dump_ids_name_small.csv', 'r')]
-
-id_numbers_names_key_value = {}
-
-for j in xrange(1, len(lines)):
-    id_numbers_names_key_value[lines[j][0]] = lines[j][1]
-
+lines = [line.rstrip('\r\n').split('\t') for line in open('comunaid_small.csv', 'r')]
+id_numbers = [lines[j][0] for j in xrange(1, len(lines))]
 
 # Get data from each link
 data_text = ""
@@ -115,12 +109,12 @@ fw_second = open("SecondPrisonData.csv", 'w')
 fw_second_error = open("SecondPrisonData_ERROR.csv", 'w')
 fw_second.write(varnames_second) # Write variable names
 
+
 counter = 1
 for link_j in links_j:
-    for id_number, last_name in id_numbers_names_key_value.iteritems():
+    for id_number in id_numbers:
         print str(counter) + "\t" + link_j + "\t" + id_number
         counter += 1
-
         br = Browser()
         try:
             br.open(link_j)
@@ -128,7 +122,6 @@ for link_j in links_j:
             print "Exception while opening" + str(link_j) + "\nSleeping for 10 minutes"
             time.sleep(600)
             continue
-
         br.form = list(br.forms())[0]
 
         control = br.form.find_control("cbadju")
@@ -138,6 +131,7 @@ for link_j in links_j:
         control = br.form.find_control("norad")
         if control.type == "text":  # make sure it is the right one
             control.value = id_number
+
         try:
             response = br.submit()
         except:
@@ -145,57 +139,31 @@ for link_j in links_j:
             time.sleep(600)
             continue
 
-        links_first = []
+        soup2 = BeautifulSoup(response)
+        links_first = []  # This will store the links that appear after the first search
 
         for l in br.links():
-            link = l.absolute_url
-            if link != "http://www.ramajudicial.gov.co":
-                links_first.append(link)
+            l1 = l.absolute_url
+            if l1 != "http://www.ramajudicial.gov.co":  # Not useful
+                links_first.append(l1)
+                try:
+                    data_text = str(id_number) + "\t" + get_data_first(l1)
+                    fw_first.write(data_text)  # Write data
+                    add = 0
+                except:
+                    add = 1
 
-        if not links_first:
-            br = Browser()
-            try:
-                br.open(link_j)
-            except:
-                print "Exception while opening" + str(link_j) + "\nSleeping for 10 minutes"
-                time.sleep(600)
-                continue
-            br.form = list(br.forms())[0]
-
-            control = br.form.find_control("norad")
-            if control.type == "text":  # make sure it is the right one
-                control.value = last_name
-
-            try:
-                response = br.submit()
-            except:
-                print "Exception while submitting" + str(last_name) + "\nSleeping for 10 minutes"
-                time.sleep(600)
-                continue
-
-            for l in br.links():
-                link = l.absolute_url
-                if link != "http://www.ramajudicial.gov.co":
-                    links_first.append(link)
+                if add:
+                    links_page_first_error = str(l1) + "\n"
+                    fw_first_error.write(links_page_first_error)
+                    remove = 0
 
         for link in links_first:
-            try:
-                data_text = str(id_number) + "\t" + str(last_name) + "\t" + get_data_first(link)
-                fw_first.write(data_text)  # Write data
-                add = 0
-            except:
-                add = 1
-
-            if add:
-                links_page_first_error = str(link) + "\n"
-                fw_first_error.write(links_page_first_error)
-
             br.open(link)
-
             for l in br.links():
                 l2 = l.absolute_url
                 try:
-                    data_text = str(id_number) + "\t" + str(last_name) + "\t" + get_data_second(l2)
+                    data_text = str(id_number) + "\t" + get_data_second(l2)
                     fw_second.write(data_text)  # Write data
                     add = 0
                 except:
@@ -204,7 +172,7 @@ for link_j in links_j:
                 if add:
                     links_page_second_error = str(l2) + "\n"
                     fw_second_error.write(links_page_second_error)
-
+                    remove = 0
 
 fw_first.close()
 fw_first_error.close()

@@ -21,13 +21,15 @@ places = [[1, 3], [1, 4], [1, 5], [3, 8], [3, 9], [3, 10], [3, 11], [3, 12], [3,
 # Variable names to be written into file (fix later.. or not?)
 varnames="ID\t"
 
+
+
 for i in xrange(1, len(places)+1):
     if i != len(places):
         varnames += "var_" + str(i) + "\t"
     else:
         varnames += "var_" + str(i) + "\n"
 
-
+print varnames
 ## Functions
 def get_links(link, id_number):
     '''
@@ -75,7 +77,7 @@ def get_data(link):
 
     for coords in places: # Places is a list of the position of each piece of information
         try:
-            if coords[1] >= 6 and coords[1] <= 17 and coords[0] == 13:
+            if coords[1] >= 6 and coords[1] <= 19 and coords[0] == 13:
                 data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].find('input').get('value'))
             else:
                 data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].text)
@@ -91,8 +93,6 @@ def get_data(link):
             data_text += dat.encode('utf-8') + "\n"
             
     return data_text
-
-
 
 # Get ids out of file
 lines = [line.rstrip('\r\n').split('\t') for line in open('comunaid_small.csv', 'r')]

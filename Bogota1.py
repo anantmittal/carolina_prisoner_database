@@ -1,8 +1,10 @@
 from BeautifulSoup import BeautifulSoup
 from mechanize import Browser
 import urllib2
+import time
 
-links_j = ["http://procesos.ramajudicial.gov.co/jepms/medellinjepms/conectar.asp"]
+links_j = [ "http://procesos.ramajudicial.gov.co/jepms/bogotajepms/conectar.asp",
+   ]
 
 # Location of every piece of information
 places_second = [[1, 3], [1, 4], [1, 5], [3, 8], [3, 9], [3, 10], [3, 11], [3, 12], [3, 13], [3, 14], [7, 1], [7, 3], [7, 5], [7, 7],
@@ -14,8 +16,12 @@ places_second = [[1, 3], [1, 4], [1, 5], [3, 8], [3, 9], [3, 10], [3, 11], [3, 1
           [15, 39], [15, 40], [15, 42], [15, 44], [15, 46], [15, 49], [15, 51], [15, 53], [15, 54], [15, 55], [15, 57], [15, 59],
           [15, 61], [15, 63], [15, 65], [15, 72], [15, 74], [15, 76], [15, 77], [15, 78], [15, 79], [15, 82], [15, 84]]
 
-places_first = [[1, 3], [1, 4], [1, 5], [3, 8], [3, 9], [3, 10], [3, 11], [3, 12], [3, 13], [3, 14],
-          [13,1],[13,6],[13,7],[13,8],[13,9],[13,10],[13,11],[13,12],[13,13],[13,14],[13,15],[13,16],[13,17],[13,19]]
+places_first = [[1, 3], [1, 4], [1, 5],
+                [3, 8], [3, 9], [3, 10], [3, 11], [3, 12], [3, 13], [3, 14],
+                [7,2],[7,3],
+                [9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[9,10],
+                [10,1],[10,3],[10,5],[10,7],
+                [13,1],[13,6],[13,7],[13,8],[13,9],[13,10],[13,11],[13,12],[13,13],[13,14],[13,15],[13,16],[13,17],[13,19]]
 
 
 # Variable names to be written into file (fix later.. or not?)
@@ -47,7 +53,7 @@ def get_data_first(link):
 
     for coords in places_first:  # Places is a list of the position of each piece of information
         try:
-            if coords[1] >= 6 and coords[1] <= 17 and coords[0] == 13:
+            if coords[1] >= 6 and coords[1] <= 19 and coords[0] == 13:
                 data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].find('input').get('value'))
             else:
                 data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].text)
@@ -93,19 +99,19 @@ def get_data_second(link):
 
 
 # Get ids out of file
-lines = [line.rstrip('\r\n').split('\t') for line in open('comunaid_small.csv', 'r')]
+lines = [line.rstrip('\r\n').split('\t') for line in open('bogota1.csv', 'r')]
 id_numbers = [lines[j][0] for j in xrange(1, len(lines))]
 
 # Get data from each link
 data_text = ""
 
 # Writing the data to file
-fw_first = open("FirstPrisonData.csv", 'w')
-fw_first_error = open("FirstPrisonData_ERROR.csv", 'w')
+fw_first = open("FirstPrisonDatabog1.csv", 'w')
+fw_first_error = open("FirstPrisonData_ERRORbog1.csv", 'w')
 fw_first.write(varnames_first) # Write variable names
 
-fw_second = open("SecondPrisonData.csv", 'w')
-fw_second_error = open("SecondPrisonData_ERROR.csv", 'w')
+fw_second = open("SecondPrisonDatabog1.csv", 'w')
+fw_second_error = open("SecondPrisonData_ERRORbog1.csv", 'w')
 fw_second.write(varnames_second) # Write variable names
 
 
@@ -115,19 +121,28 @@ for link_j in links_j:
         print str(counter) + "\t" + link_j + "\t" + id_number
         counter += 1
         br = Browser()
-        br.open(link_j)
+        try:
+            br.open(link_j)
+        except:
+            print "Exception while opening" + str(link_j) + "\nSleeping for 10 minutes"
+            time.sleep(600)
+            continue
         br.form = list(br.forms())[0]
 
-        if id_number != "":  # If we have id number
-            control = br.form.find_control("cbadju")
-            if control.type == "select":  # make sure it is the right one
-                control.value = ['3']
+        control = br.form.find_control("cbadju")
+        if control.type == "select":  # make sure it is the right one
+            control.value = ['3']
 
-            control = br.form.find_control("norad")
-            if control.type == "text":  # make sure it is the right one
-                control.value = id_number
+        control = br.form.find_control("norad")
+        if control.type == "text":  # make sure it is the right one
+            control.value = id_number
 
-        response = br.submit()
+        try:
+            response = br.submit()
+        except:
+            print "Exception while submitting" + str(id_number) + "\nSleeping for 10 minutes"
+            time.sleep(600)
+            continue
 
         soup2 = BeautifulSoup(response)
         links_first = []  # This will store the links that appear after the first search
