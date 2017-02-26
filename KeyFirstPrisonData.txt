@@ -44,8 +44,7 @@ var38: EJECUTORIA 3: 		[13, 16]
 var39: cdno y folios 3: 			[13, 17]
 var40: FECHA DE LOS HECHOS: 		[13, 19]
 
+3. CLASE DE PROCESO
 
-
-
-
-
+var41: First cell: 		[15, 1]
+var42: Second cell: 		[15, 2]
