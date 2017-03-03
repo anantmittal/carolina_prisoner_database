@@ -11,7 +11,7 @@ places_second = [[1, 3], [1, 4], [1, 5], [3, 8], [3, 9], [3, 10], [3, 11], [3, 1
           [7, 9], [7, 11], [7, 13], [7, 15], [7, 17], [7, 19], [7, 21], [7, 23], [9, 5], [9, 8], [9, 9], [9, 10], [9, 11],
           [9, 12], [10, 1], [10, 2], [11, 1], [12, 2], [12, 4], [12, 6], [12, 8], [12, 11], [12, 13], [12, 15], [12, 17],
           [14, 12], [14, 13], [14, 14], [14, 15], [14, 16], [14, 17], [14, 18], [14, 19], [14, 21], [14, 22], [14, 23],
-          [14, 24], [14, 25], [14, 26], [14, 27], [14, 28], [15, 2], [15, 5], [15, 10], [15, 13], [15, 16], [15, 18], [15, 19],
+          [14, 24], [14, 25], [14, 26], [14, 27], [14, 28], [15, 0], [15, 2], [15, 5], [15, 10], [15, 13], [15, 16], [15, 18], [15, 19],
           [15, 20], [15, 21], [15, 23], [15, 26], [15, 28], [15, 29], [15, 30], [15, 31], [15, 33], [15, 35], [15, 37], [15, 38],
           [15, 39], [15, 40], [15, 42], [15, 44], [15, 46], [15, 49], [15, 51], [15, 53], [15, 54], [15, 55], [15, 57], [15, 59],
           [15, 61], [15, 63], [15, 65], [15, 72], [15, 74], [15, 76], [15, 77], [15, 78], [15, 79], [15, 82], [15, 84]]
@@ -53,7 +53,7 @@ def get_data_first(link):
 
     for coords in places_first:  # Places is a list of the position of each piece of information
         try:
-            if coords[1] >= 6 and coords[1] <= 19 and coords[0] == 13:
+            if coords[0] == 13 and coords[1] >= 6 and coords[1] <= 19:
                 data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].find('input').get('value'))
             else:
                 data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].text)
@@ -83,7 +83,10 @@ def get_data_second(link):
 
     for coords in places_second:  # Places is a list of the position of each piece of information
         try:
-            data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].text)
+            if ((coords[0] == 9 and coords[1] >= 11 and coords[1] <= 12) or (coords[0] == 15 and coords[1] == 82)):
+                data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].find('input').get('value'))
+            else:
+                data.append(soup.findAll("table")[coords[0]].findAll("td")[coords[1]].text)
         except:
             pass
 
